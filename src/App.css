@@ -1,2 +1,10 @@
 #root {
 }
+
+h3 {
+  color: gray;
+}
+.display {
+  font-size: x-large;
+  font-weight: bold;
+}
