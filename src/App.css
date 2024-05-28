@@ -1,10 +1,15 @@
 #root {
+  color: #252528;
 }
 
 h3 {
-  color: gray;
+  border-bottom: 1px solid gray;
 }
+
 .display {
   font-size: x-large;
   font-weight: bold;
+}
+.display.beat {
+  font-size: xx-large;
 }

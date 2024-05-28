@@ -50,7 +50,7 @@ function App() {
         prevBeatStartTime = beat.startTime;
         let beatText = "";
         for (let i = 0; i < beat.position; i++) {
-          beatText += "*";
+          beatText += "* ";
         }
         beatsDisplayRef.current!.textContent = beatText;
       }
@@ -104,8 +104,7 @@ function App() {
   }, []);
   return (
     <>
-      <h1>textAlive App Basic</h1>
-
+      <h1>TextAlive App Basic</h1>
       <div>
         <div id="media" ref={mediaRef}></div>
         <button ref={playBtnRef} disabled>
@@ -120,33 +119,29 @@ function App() {
       </div>
 
       <div>
-        <h3>Lyric→</h3>
+        <h3>Lyric</h3>
+        <div className="div"></div>
         <p>
-          <span className="display" ref={charDisplayRef}>
-            Character
-          </span>
+          Char:
+          <span className="display" ref={charDisplayRef}></span>
         </p>
         <p>
-          <span className="display" ref={wordDisplayRef}>
-            Word
-          </span>
+          Word:
+          <span className="display" ref={wordDisplayRef}></span>
         </p>
         <p>
-          <span className="display" ref={phraseDisplayRef}>
-            Phrase
-          </span>
+          phrase:
+          <span className="display" ref={phraseDisplayRef}></span>
         </p>
-        <h3>Chord→</h3>
+        <h3>Chord</h3>
+        <div className="div"></div>
         <p>
-          <span className="display" ref={chordDisplayRef}>
-            Chord
-          </span>
+          <span className="display" ref={chordDisplayRef}></span>
         </p>
-        <h3>Beats→</h3>
+        <h3>Beats</h3>
+        <div className="div"></div>
         <p>
-          <span className="display" ref={beatsDisplayRef}>
-            Beats
-          </span>
+          <span className="display" ref={beatsDisplayRef}></span>
         </p>
       </div>
     </>
