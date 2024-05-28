@@ -29,7 +29,7 @@ function App() {
     console.log(playBtnRef.current);
 
     const player = new Player({
-      app: { token: "pLPdxQ1b4e3Rfn0O" },
+      app: { token: import.meta.env.APP_TOKEN },
       mediaElement: mediaRef.current,
     });
 
