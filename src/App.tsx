@@ -33,31 +33,6 @@ function App() {
       mediaElement: mediaRef.current,
     });
 
-    let loopId: number;
-    let prevBeatStartTime = 0;
-    const loop = () => {
-      const char = player.video.findChar(player.timer.position)?.text;
-      const word = player.video.findWord(player.timer.position)?.text;
-      const phrase = player.video.findPhrase(player.timer.position)?.text;
-
-      char && (charDisplayRef.current!.textContent = char);
-      word && (wordDisplayRef.current!.textContent = word);
-      phrase && (phraseDisplayRef.current!.textContent = phrase);
-      chordDisplayRef.current!.textContent = player.findChord(player.timer.position).name;
-      const beat = player.findBeat(player.timer.position);
-      if (beat && beat.startTime !== prevBeatStartTime) {
-        console.log(beat.startTime);
-        prevBeatStartTime = beat.startTime;
-        let beatText = "";
-        for (let i = 0; i < beat.position; i++) {
-          beatText += "* ";
-        }
-        beatsDisplayRef.current!.textContent = beatText;
-      }
-      // beatsDisplayRef.current!.textContent = player.findBeat(player.timer.position).length.toString();
-      loopId = requestAnimationFrame(loop);
-    };
-
     const addButtonEventListeners = () => {
       playBtnRef.current!.addEventListener("click", () => player.requestPlay());
       pauseBtnRef.current!.addEventListener("click", () => player.requestPause());
@@ -85,21 +60,40 @@ function App() {
       playBtnRef.current!.disabled = false;
       pauseBtnRef.current!.disabled = false;
       rewindBtnRef.current!.disabled = false;
-      loopId = requestAnimationFrame(loop);
+    };
+    let prevBeatStartTime = -1;
+    const onTimeUpdate = (position: number) => {
+      const char = player.video.findChar(position)?.text;
+      const word = player.video.findWord(position)?.text;
+      const phrase = player.video.findPhrase(position)?.text;
+
+      char && (charDisplayRef.current!.textContent = char);
+      word && (wordDisplayRef.current!.textContent = word);
+      phrase && (phraseDisplayRef.current!.textContent = phrase);
+      chordDisplayRef.current!.textContent = player.findChord(position).name;
+      const beat = player.findBeat(position);
+      if (beat && beat.startTime !== prevBeatStartTime) {
+        //取得したビートが小節中の何拍目かに応じて「*」を表示します。
+        prevBeatStartTime = beat.startTime;
+        let beatText = "";
+        for (let i = 0; i < beat.position; i++) {
+          beatText += "* ";
+        }
+        beatsDisplayRef.current!.textContent = beatText;
+      }
     };
 
     player.addListener({
       onAppReady,
       onVideoReady,
       onTimerReady,
+      onTimeUpdate,
     });
 
     // // loopId = requestAnimationFrame(loop);
 
     return () => {
       player.dispose();
-      console.log("cancel", loopId);
-      cancelAnimationFrame(loopId);
     };
   }, []);
   return (
