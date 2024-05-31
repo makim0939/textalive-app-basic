@@ -1,15 +1,32 @@
-#root {
+.controls {
+  width: 60%;
+  margin: 0 auto;
+}
+h1 {
+  text-align: center;
+}
+h3 {
+  border-bottom: gray 1px solid;
+}
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.25s;
   color: #252528;
 }
-
-h3 {
-  border-bottom: 1px solid gray;
+button:hover {
+  border-color: #646cff;
 }
-
-.display {
-  font-size: x-large;
-  font-weight: bold;
-}
-.display.beat {
-  font-size: xx-large;
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
 }
