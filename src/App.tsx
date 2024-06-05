@@ -14,6 +14,9 @@ function App() {
   const rewindBtnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    const playButton = playBtnRef.current;
+    const pauseButton = pauseBtnRef.current;
+    const rewindButton = rewindBtnRef.current;
     const isRefReady =
       mediaRef.current &&
       charDisplayRef.current &&
@@ -21,29 +24,38 @@ function App() {
       phraseDisplayRef.current &&
       chordDisplayRef.current &&
       beatDisplayRef.current &&
-      playBtnRef.current &&
-      pauseBtnRef.current &&
-      rewindBtnRef.current;
+      playButton &&
+      pauseButton &&
+      rewindButton;
     if (!isRefReady) return;
 
+    // ===== Playerを作成してリスナを登録することで順次処理を開始 ===== //
+    const player = new Player({
+      app: { token: import.meta.env.VITE_TEXTALIVE_APP_TOKEN as string },
+      mediaElement: document.querySelector("#media") as HTMLDivElement,
+    });
     //ボタンに再生・停止・巻き戻しをセットします。
+    const play = () => player.requestPlay();
+    const pause = () => player.requestPause();
+    const rewind = () => player.requestMediaSeek(0);
+
     const addButtonEventListeners = () => {
-      playBtnRef.current!.addEventListener("click", () => player.requestPlay());
-      pauseBtnRef.current!.addEventListener("click", () => player.requestPause());
-      rewindBtnRef.current!.addEventListener("click", () => player.requestMediaSeek(0));
+      playButton!.addEventListener("click", play);
+      pauseButton!.addEventListener("click", pause);
+      rewindButton!.addEventListener("click", rewind);
     };
 
     // ===== 楽曲情報を取得、表示するためのメソッドを用意 ===== //
     //Playerに設定するイベントリスナです。(onAppReady, onTimerReady)
     const onAppReady = (app: IPlayerApp) => {
       player.createFromSongUrl("https://piapro.jp/t/fnhJ/20230131212038");
-      addButtonEventListeners();
     };
     const onTimerReady = (t: Timer) => {
       //再生の準備が整った時に呼ばれます。
-      playBtnRef.current!.disabled = false;
-      pauseBtnRef.current!.disabled = false;
-      rewindBtnRef.current!.disabled = false;
+      addButtonEventListeners();
+      playButton!.disabled = false;
+      pauseButton!.disabled = false;
+      rewindButton!.disabled = false;
     };
 
     let prevBeatPosition = -1;
@@ -70,18 +82,18 @@ function App() {
       prevBeatPosition = beat.position;
     };
 
-    // ===== Playerを作成してリスナを登録することで順次処理を開始 ===== //
-    const player = new Player({
-      app: { token: "pLPdxQ1b4e3Rfn0O" },
-      mediaElement: document.querySelector("#media") as HTMLDivElement,
-    });
     player.addListener({
       onAppReady,
       onTimerReady,
       onTimeUpdate,
     });
     return () => {
-      player.dispose();
+      if (player) player.dispose();
+      if (playButton && pauseButton && rewindButton) {
+        playButton.removeEventListener("click", play);
+        pauseButton.removeEventListener("click", pause);
+        rewindButton.removeEventListener("click", rewind);
+      }
     };
   }, []);
 
